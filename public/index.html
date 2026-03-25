@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Converter Pro</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        h1 { margin-top: 0; }
+        input[type="file"] { margin: 1rem 0; }
+        button { padding: 0.5rem 1rem; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #status { margin-top: 1rem; font-weight: bold; }
+        #downloadLink a { color: #28a745; text-decoration: none; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MP4 a MP3 Converter</h1>
+        <form id="uploadFormVideo">
+            <input type="file" id="fileInputVideo" name="video" accept="video/mp4" required>
+            <button type="submit">Convertir a MP3</button>
+        </form>
+        <div id="statusVideo"></div>
+        <div id="downloadLinkVideo"></div>
+    </div>
+
+    <div class="container" style="margin-top: 2rem;">
+        <h1>Image Tools</h1>
+        <form id="uploadFormImage">
+            <input type="file" id="fileInputImage" name="image" accept="image/jpeg,image/png,image/gif,image/webp" required>
+            <br>
+            <label for="imageAction">Acción:</label>
+            <select id="imageAction" name="action">
+                <option value="resize">Resize & Convert</option>
+                <option value="remove-bg">Remove Background</option>
+            </select>
+            <br>
+            <div id="resizeOptions">
+                <label for="width">Ancho (px):</label>
+                <input type="number" id="width" name="width" placeholder="Opcional">
+                <label for="format">Formato:</label>
+                <select id="format" name="format">
+                    <option value="jpg">JPG</option>
+                    <option value="png">PNG</option>
+                    <option value="gif">GIF</option>
+                    <option value="webp">WEBP</option>
+                </select>
+            </div>
+            <br>
+            <button type="submit">Procesar Imagen</button>
+        </form>
+        <div id="statusImage"></div>
+        <div id="downloadLinkImage"></div>
+    </div>
+
+    <div class="container" style="margin-top: 2rem;">
+        <h1>PDF Tools</h1>
+        <form id="uploadFormPdf">
+            <input type="file" id="fileInputPdf" name="pdf" accept="application/pdf" required>
+            <br>
+            <button type="submit">Comprimir PDF</button>
+        </form>
+        <div id="statusPdf"></div>
+        <div id="downloadLinkPdf"></div>
+    </div>
+
+    <script>
+        const formVideo = document.getElementById('uploadFormVideo');
+        const fileInputVideo = document.getElementById('fileInputVideo');
+        const statusDivVideo = document.getElementById('statusVideo');
+        const downloadLinkDivVideo = document.getElementById('downloadLinkVideo');
+
+        formVideo.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('video', fileInputVideo.files[0]);
+
+            statusDivVideo.textContent = 'Subiendo y convirtiendo... por favor, espera.';
+            downloadLinkDivVideo.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/v1/video/mp4-to-mp3', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('La conversión de video ha fallado.');
+                }
+
+                const result = await response.json();
+                statusDivVideo.textContent = '¡Conversión de video completada!';
+                
+                const a = document.createElement('a');
+                a.href = result.downloadUrl;
+                a.textContent = 'Descargar MP3';
+                a.download = '';
+                downloadLinkDivVideo.appendChild(a);
+
+            } catch (error) {
+                statusDivVideo.textContent = error.message;
+            }
+        });
+
+        // Lógica para el formulario de imágenes
+        const formImage = document.getElementById('uploadFormImage');
+        const fileInputImage = document.getElementById('fileInputImage');
+        const widthInput = document.getElementById('width');
+        const formatInput = document.getElementById('format');
+        const statusDivImage = document.getElementById('statusImage');
+        const downloadLinkDivImage = document.getElementById('downloadLinkImage');
+
+        const imageAction = document.getElementById('imageAction');
+        
+        imageAction.addEventListener('change', () => {
+            document.getElementById('resizeOptions').style.display = imageAction.value === 'resize' ? 'block' : 'none';
+        });
+
+        formImage.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('image', fileInputImage.files[0]);
+            
+            let url = '';
+            if (imageAction.value === 'resize') {
+                url = '/api/v1/image/resize-convert';
+                formData.append('width', widthInput.value);
+                formData.append('format', formatInput.value);
+            } else {
+                url = '/api/v1/image/remove-background';
+            }
+
+            statusDivImage.textContent = 'Procesando imagen...';
+            downloadLinkDivImage.innerHTML = '';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.details || 'La conversión de imagen ha fallado.');
+                }
+                
+                const result = await response.json();
+                statusDivImage.textContent = '¡Procesado de imagen completado!';
+
+                const a = document.createElement('a');
+                a.href = result.downloadUrl;
+                a.textContent = `Descargar ${result.fileName}`;
+                a.download = result.fileName;
+                downloadLinkDivImage.appendChild(a);
+
+            } catch (error) {
+                statusDivImage.textContent = error.message;
+            }
+        });
+
+        // Lógica para el formulario de PDF
+        const formPdf = document.getElementById('uploadFormPdf');
+        const fileInputPdf = document.getElementById('fileInputPdf');
+        const statusDivPdf = document.getElementById('statusPdf');
+        const downloadLinkDivPdf = document.getElementById('downloadLinkPdf');
+
+        formPdf.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('pdf', fileInputPdf.files[0]);
+
+            statusDivPdf.textContent = 'Comprimiendo PDF... por favor, espera.';
+            downloadLinkDivPdf.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/v1/pdf/compress', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.details || 'La compresión de PDF ha fallado.');
+                }
+
+                const result = await response.json();
+                statusDivPdf.textContent = '¡Compresión completada!';
+                
+                const a = document.createElement('a');
+                a.href = result.downloadUrl;
+                a.textContent = `Descargar PDF Comprimido (${result.fileName})`;
+                a.download = result.fileName;
+                downloadLinkDivPdf.appendChild(a);
+
+            } catch (error) {
+                statusDivPdf.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>
