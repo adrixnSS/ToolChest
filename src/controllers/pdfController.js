@@ -1,4 +1,4 @@
-const ghostscriptService = require('../services/ghostscriptService');
+const pdfService = require('../services/pdfService');
 const path = require('path');
 const fs = require('fs');
 
@@ -8,12 +8,13 @@ exports.compressPdf = async (req, res) => {
     }
 
     const inputPath = req.file.path;
+    const { title, author, subject, keywords, creator, producer } = req.body;
     const originalName = path.parse(req.file.originalname).name;
-    const outputFileName = `${originalName}-compressed-${Date.now()}.pdf`;
+    const outputFileName = `${originalName}-updated-${Date.now()}.pdf`;
     const outputPath = path.join('uploads', outputFileName);
 
     try {
-        await ghostscriptService.compressPdf(inputPath, outputPath);
+        await pdfService.compressPdf(inputPath, outputPath, title, author, subject, keywords, creator, producer);
 
         res.download(outputPath, outputFileName, (err) => {
             if (err) {

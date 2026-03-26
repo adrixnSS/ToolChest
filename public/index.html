@@ -1,206 +1,280 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Converter Pro</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
-        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
-        h1 { margin-top: 0; }
-        input[type="file"] { margin: 1rem 0; }
-        button { padding: 0.5rem 1rem; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        #status { margin-top: 1rem; font-weight: bold; }
-        #downloadLink a { color: #28a745; text-decoration: none; font-size: 1.2rem; }
-    </style>
+    <title>Toolchest.site - Professional Tool Suite</title>
+    <!-- Google Fonts: Playfair Display for massive headings, DM Sans for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>MP4 a MP3 Converter</h1>
-        <form id="uploadFormVideo">
-            <input type="file" id="fileInputVideo" name="video" accept="video/mp4" required>
-            <button type="submit">Convertir a MP3</button>
-        </form>
-        <div id="statusVideo"></div>
-        <div id="downloadLinkVideo"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Top Banner Ad Slot -->
+    <div class="ad-slot top-banner">
+        <span>Advertisement Area (728x90)</span>
+        <!-- Insert AdSense script here -->
     </div>
 
-    <div class="container" style="margin-top: 2rem;">
-        <h1>Image Tools</h1>
-        <form id="uploadFormImage">
-            <input type="file" id="fileInputImage" name="image" accept="image/jpeg,image/png,image/gif,image/webp" required>
-            <br>
-            <label for="imageAction">Acción:</label>
-            <select id="imageAction" name="action">
-                <option value="resize">Resize & Convert</option>
-                <option value="remove-bg">Remove Background</option>
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-toolbox logo-icon"></i>
+            <span>Toolchest<span class="tld">.site</span></span>
+        </div>
+        <nav class="auth-nav">
+            <select id="langSwitcher" class="custom-select header-select">
+                <option value="en">EN</option>
+                <option value="es">ES</option>
             </select>
-            <br>
-            <div id="resizeOptions">
-                <label for="width">Ancho (px):</label>
-                <input type="number" id="width" name="width" placeholder="Opcional">
-                <label for="format">Formato:</label>
-                <select id="format" name="format">
-                    <option value="jpg">JPG</option>
-                    <option value="png">PNG</option>
-                    <option value="gif">GIF</option>
-                    <option value="webp">WEBP</option>
-                </select>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <!-- Main Tool Column -->
+        <article class="editorial-pane">
+            <div class="hero-text">
+                <h1 data-i18n="hero_title">Elevate your workflow</h1>
+                <p data-i18n="hero_subtitle">Professional file conversions, background removal, and compression tools in one sleek interface.</p>
             </div>
-            <br>
-            <button type="submit">Procesar Imagen</button>
-        </form>
-        <div id="statusImage"></div>
-        <div id="downloadLinkImage"></div>
+
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-target="video-tool">
+                        <span class="tab-number">01.</span> <span data-i18n="tab_video">Video</span>
+                    </button>
+                    <button class="tab-btn" data-target="image-tool">
+                        <span class="tab-number">02.</span> <span data-i18n="tab_image">Image</span>
+                    </button>
+                    <button class="tab-btn" data-target="pdf-tool">
+                        <span class="tab-number">03.</span> <span data-i18n="tab_pdf">PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="tool-content">
+                <!-- Video Tool -->
+                <div id="video-tool" class="tool-section active-tool">
+                    <h2 class="tool-title" data-i18n="video_title">Advanced Video Processing</h2>
+                    <form id="uploadFormVideo" class="tool-form">
+                        <div class="dropzone" id="dropzoneVideo">
+                            <i class="fa-solid fa-upload drop-icon"></i>
+                            <p data-i18n="video_drop">Drag & Drop your Video here</p>
+                            <span class="file-hint">MP4, MKV, AVI, MOV...</span>
+                            <input type="file" id="fileInputVideo" name="video" accept="video/*" required class="file-input">
+                        </div>
+                        <div class="selected-file" id="selectedFileVideo" style="display:none; flex-direction:column; align-items:stretch; gap:0.5rem;">
+                            <div style="display:flex; width:100%; align-items:center; gap:1rem;">
+                                <i class="fa-solid fa-file-video"></i>
+                                <span class="filename" style="flex:1;">filename.mp4</span>
+                                <i class="fa-solid fa-xmark remove-file" data-target="fileInputVideo"></i>
+                            </div>
+                            <span class="file-meta" id="fileMetaVideo">0 MB</span>
+                            
+                            <!-- Video Trimmer Preview -->
+                            <div id="videoPreviewContainer" style="display:none; width:100%; margin-top:0.5rem; border-top: 1px solid var(--border-color); padding-top:1rem;">
+                                <video id="videoPreview" controls class="video-preview-player"></video>
+                                <div class="options-row" style="margin-top:0.5rem;">
+                                    <div class="input-group half">
+                                        <label for="videoStartTime"><span data-i18n="video_start">Start Time (sec):</span></label>
+                                        <input type="number" id="videoStartTime" name="startTime" min="0" step="0.1" value="0" class="custom-input">
+                                    </div>
+                                    <div class="input-group half">
+                                        <label for="videoEndTime"><span data-i18n="video_end">End Time (sec):</span></label>
+                                        <input type="number" id="videoEndTime" name="endTime" min="0" step="0.1" class="custom-input">
+                                    </div>
+                                </div>
+                                <p class="trim-hint" data-i18n="video_trim_hint">Adjust values to trim the video.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tool-options card-bg">
+                            <div class="input-group">
+                                <label for="videoAction" data-i18n="video_action">Action:</label>
+                                <select id="videoAction" name="action" class="custom-select">
+                                    <option value="extract-audio" data-i18n="video_act_extract">Convert to MP3 (Audio Only)</option>
+                                    <option value="compress-video" data-i18n="video_act_compress">Compress Video (Reduce File Size)</option>
+                                </select>
+                            </div>
+
+                            <div id="videoCompressOptions" class="conditional-options" style="display: none; margin-top:1rem;">
+                                <div class="input-group">
+                                    <label for="videoQuality" data-i18n="video_quality">Target Quality:</label>
+                                    <select id="videoQuality" name="quality" class="custom-select">
+                                        <option value="1080p" data-i18n="video_q_high">High (1080p)</option>
+                                        <option value="720p" selected data-i18n="video_q_med">Medium (720p)</option>
+                                        <option value="480p" data-i18n="video_q_low">Low (480p)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary"><span data-i18n="video_btn">Process Video</span> <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+
+                <!-- Image Tool -->
+                <div id="image-tool" class="tool-section">
+                    <h2 class="tool-title" data-i18n="img_title">Professional Image Tools</h2>
+                    <form id="uploadFormImage" class="tool-form">
+                        <div class="dropzone" id="dropzoneImage">
+                            <i class="fa-solid fa-upload drop-icon"></i>
+                            <p data-i18n="img_drop">Drag & Drop your Image here</p>
+                            <span class="file-hint">JPG, PNG, WEBP, GIF</span>
+                            <input type="file" id="fileInputImage" name="image" accept="image/*" required class="file-input">
+                        </div>
+                        <div class="selected-file" id="selectedFileImage" style="display:none; flex-direction:column; align-items:flex-start; gap:0.5rem;">
+                            <div style="display:flex; width:100%; align-items:center; gap:1rem;">
+                                <i class="fa-solid fa-file-image"></i>
+                                <span class="filename" style="flex:1;">filename.png</span>
+                                <i class="fa-solid fa-xmark remove-file" data-target="fileInputImage"></i>
+                            </div>
+                            <span class="file-meta" id="fileMetaImage">0 MB</span>
+                        </div>
+                        
+                        <div class="tool-options card-bg">
+                            <div class="input-group">
+                                <label for="imageAction" data-i18n="img_action">Action:</label>
+                                <select id="imageAction" name="action" class="custom-select">
+                                    <option value="remove-bg" data-i18n="img_act_rm">Remove Background</option>
+                                    <option value="resize" data-i18n="img_act_res">Resize & Convert Format</option>
+                                </select>
+                            </div>
+
+                            <div id="resizeOptions" class="conditional-options" style="display: none; margin-top:1rem;">
+                                <div class="options-row">
+                                    <div class="input-group half">
+                                        <label for="width" data-i18n="img_width">Width (px):</label>
+                                        <input type="number" id="width" name="width" placeholder="Auto" class="custom-input">
+                                    </div>
+                                    <div class="input-group half">
+                                        <label for="format" data-i18n="img_fmt">Format:</label>
+                                        <select id="format" name="format" class="custom-select">
+                                            <option value="png">PNG</option>
+                                            <option value="jpg">JPG</option>
+                                            <option value="webp">WEBP</option>
+                                            <option value="gif">GIF</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary"><span data-i18n="img_btn">Process Image</span> <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+
+                <!-- PDF Tool -->
+                <div id="pdf-tool" class="tool-section">
+                    <h2 class="tool-title" data-i18n="pdf_title">PDF Optimization & Full Metadata</h2>
+                    <form id="uploadFormPdf" class="tool-form">
+                        <div class="dropzone" id="dropzonePdf">
+                            <i class="fa-solid fa-upload drop-icon"></i>
+                            <p data-i18n="pdf_drop">Drag & Drop your PDF here</p>
+                            <span class="file-hint" data-i18n="pdf_hint">Compress and edit all properties</span>
+                            <input type="file" id="fileInputPdf" name="pdf" accept="application/pdf" required class="file-input">
+                        </div>
+                        <div class="selected-file" id="selectedFilePdf" style="display:none; flex-direction:column; align-items:flex-start; gap:0.5rem;">
+                            <div style="display:flex; width:100%; align-items:center; gap:1rem;">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="filename" style="flex:1;">filename.pdf</span>
+                                <i class="fa-solid fa-xmark remove-file" data-target="fileInputPdf"></i>
+                            </div>
+                            <span class="file-meta" id="fileMetaPdf">0 MB</span>
+                        </div>
+
+                        <div class="tool-options card-bg">
+                            <p class="tool-desc" data-i18n="pdf_desc">The PDF will be automatically compressed when saving. You can also totally control the internal documentation properties below.</p>
+                            <div class="options-row">
+                                <div class="input-group half">
+                                    <label for="pdfTitle" data-i18n="pdf_f_title">Document Title:</label>
+                                    <input type="text" id="pdfTitle" name="title" class="custom-input">
+                                </div>
+                                <div class="input-group half">
+                                    <label for="pdfAuthor" data-i18n="pdf_f_author">Author:</label>
+                                    <input type="text" id="pdfAuthor" name="author" class="custom-input">
+                                </div>
+                            </div>
+                            <div class="options-row">
+                                <div class="input-group half">
+                                    <label for="pdfSubject" data-i18n="pdf_f_sub">Subject:</label>
+                                    <input type="text" id="pdfSubject" name="subject" class="custom-input">
+                                </div>
+                                <div class="input-group half">
+                                    <label for="pdfKeywords" data-i18n="pdf_f_key">Keywords:</label>
+                                    <input type="text" id="pdfKeywords" name="keywords" class="custom-input">
+                                </div>
+                            </div>
+                            <div class="options-row">
+                                <div class="input-group half">
+                                    <label for="pdfCreator" data-i18n="pdf_f_creat">Creator:</label>
+                                    <input type="text" id="pdfCreator" name="creator" class="custom-input">
+                                </div>
+                                <div class="input-group half">
+                                    <label for="pdfProducer" data-i18n="pdf_f_prod">Producer:</label>
+                                    <input type="text" id="pdfProducer" name="producer" class="custom-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary"><span data-i18n="pdf_btn">Process PDF</span> <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Global Status & Result Area -->
+            <div id="statusContainer" class="status-container" style="display: none;">
+                <p id="statusMessage" class="status-message" data-i18n="status_load">Processing your file...</p>
+                <div id="downloadAction" class="download-action" style="display: none;">
+                    <!-- Download button will be injected here -->
+                </div>
+            </div>
+
+        </article>
+
+        <!-- Sidebar Ad Slot -->
+        <aside class="ad-slot sidebar">
+            <span>Sponsor (300x600)</span>
+            <!-- AdSense Code Here -->
+        </aside>
+
+    </main>
+
+    <!-- Magic Wand Editor Modal -->
+    <div id="magicEditorModal" class="editor-modal" style="display: none;">
+        <div class="editor-content pane-modal">
+            <div class="editor-header">
+                <h2 data-i18n="modal_title">Interactive Background Eraser</h2>
+                <button id="closeEditorBtn" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="editor-toolbar">
+                <div class="input-group slider-group">
+                    <label for="toleranceSlider"><span data-i18n="modal_tol">Magic Wand Tolerance:</span> <span id="tolValue">30</span></label>
+                    <input type="range" id="toleranceSlider" min="0" max="255" value="30">
+                </div>
+                <div class="toolbar-actions">
+                    <button id="undoEditorBtn" class="btn-outline"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="modal_undo">Undo</span></button>
+                    <button id="clearEditorBtn" class="btn-outline"><i class="fa-solid fa-trash"></i> <span data-i18n="modal_reset">Reset</span></button>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <canvas id="imageCanvas"></canvas>
+            </div>
+            <div class="editor-footer">
+                <p class="file-hint" data-i18n="modal_hint">Click anywhere on the background to magically erase it.</p>
+                <button id="applyEditorBtn" class="btn-primary"><span data-i18n="modal_apply">Apply & Process</span></button>
+            </div>
+        </div>
     </div>
 
-    <div class="container" style="margin-top: 2rem;">
-        <h1>PDF Tools</h1>
-        <form id="uploadFormPdf">
-            <input type="file" id="fileInputPdf" name="pdf" accept="application/pdf" required>
-            <br>
-            <button type="submit">Comprimir PDF</button>
-        </form>
-        <div id="statusPdf"></div>
-        <div id="downloadLinkPdf"></div>
-    </div>
+    <footer class="footer">
+        <p>&copy; 2026 Toolchest.site. Edition I.</p>
+    </footer>
 
-    <script>
-        const formVideo = document.getElementById('uploadFormVideo');
-        const fileInputVideo = document.getElementById('fileInputVideo');
-        const statusDivVideo = document.getElementById('statusVideo');
-        const downloadLinkDivVideo = document.getElementById('downloadLinkVideo');
-
-        formVideo.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('video', fileInputVideo.files[0]);
-
-            statusDivVideo.textContent = 'Subiendo y convirtiendo... por favor, espera.';
-            downloadLinkDivVideo.innerHTML = '';
-
-            try {
-                const response = await fetch('/api/v1/video/mp4-to-mp3', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error('La conversión de video ha fallado.');
-                }
-
-                const result = await response.json();
-                statusDivVideo.textContent = '¡Conversión de video completada!';
-                
-                const a = document.createElement('a');
-                a.href = result.downloadUrl;
-                a.textContent = 'Descargar MP3';
-                a.download = '';
-                downloadLinkDivVideo.appendChild(a);
-
-            } catch (error) {
-                statusDivVideo.textContent = error.message;
-            }
-        });
-
-        // Lógica para el formulario de imágenes
-        const formImage = document.getElementById('uploadFormImage');
-        const fileInputImage = document.getElementById('fileInputImage');
-        const widthInput = document.getElementById('width');
-        const formatInput = document.getElementById('format');
-        const statusDivImage = document.getElementById('statusImage');
-        const downloadLinkDivImage = document.getElementById('downloadLinkImage');
-
-        const imageAction = document.getElementById('imageAction');
-        
-        imageAction.addEventListener('change', () => {
-            document.getElementById('resizeOptions').style.display = imageAction.value === 'resize' ? 'block' : 'none';
-        });
-
-        formImage.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData();
-            formData.append('image', fileInputImage.files[0]);
-            
-            let url = '';
-            if (imageAction.value === 'resize') {
-                url = '/api/v1/image/resize-convert';
-                formData.append('width', widthInput.value);
-                formData.append('format', formatInput.value);
-            } else {
-                url = '/api/v1/image/remove-background';
-            }
-
-            statusDivImage.textContent = 'Procesando imagen...';
-            downloadLinkDivImage.innerHTML = '';
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.details || 'La conversión de imagen ha fallado.');
-                }
-                
-                const result = await response.json();
-                statusDivImage.textContent = '¡Procesado de imagen completado!';
-
-                const a = document.createElement('a');
-                a.href = result.downloadUrl;
-                a.textContent = `Descargar ${result.fileName}`;
-                a.download = result.fileName;
-                downloadLinkDivImage.appendChild(a);
-
-            } catch (error) {
-                statusDivImage.textContent = error.message;
-            }
-        });
-
-        // Lógica para el formulario de PDF
-        const formPdf = document.getElementById('uploadFormPdf');
-        const fileInputPdf = document.getElementById('fileInputPdf');
-        const statusDivPdf = document.getElementById('statusPdf');
-        const downloadLinkDivPdf = document.getElementById('downloadLinkPdf');
-
-        formPdf.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('pdf', fileInputPdf.files[0]);
-
-            statusDivPdf.textContent = 'Comprimiendo PDF... por favor, espera.';
-            downloadLinkDivPdf.innerHTML = '';
-
-            try {
-                const response = await fetch('/api/v1/pdf/compress', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.details || 'La compresión de PDF ha fallado.');
-                }
-
-                const result = await response.json();
-                statusDivPdf.textContent = '¡Compresión completada!';
-                
-                const a = document.createElement('a');
-                a.href = result.downloadUrl;
-                a.textContent = `Descargar PDF Comprimido (${result.fileName})`;
-                a.download = result.fileName;
-                downloadLinkDivPdf.appendChild(a);
-
-            } catch (error) {
-                statusDivPdf.textContent = error.message;
-            }
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>

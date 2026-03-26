@@ -1,10 +1,40 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
+
+// Auto-cleanup uploads directory every 15 minutes
+setInterval(() => {
+    const uploadsDir = path.join(__dirname, 'uploads');
+    if (!fs.existsSync(uploadsDir)) return;
+    
+    fs.readdir(uploadsDir, (err, files) => {
+        if (err) return console.error('Error reading uploads for cleanup:', err);
+        const now = Date.now();
+        files.forEach(file => {
+            if (file === '.gitkeep') return;
+            const filePath = path.join(uploadsDir, file);
+            fs.stat(filePath, (err, stats) => {
+                if (err) return;
+                // Delete if older than 30 minutes
+                if (now - stats.mtimeMs > 30 * 60 * 1000) {
+                    fs.unlink(filePath, err => {
+                        if (err) console.error('Failed to cleanup file:', filePath, err);
+                    });
+                }
+            });
+        });
+    });
+}, 15 * 60 * 1000);
 
 // Configuración de Multer para la subida de archivos
 const storage = multer.diskStorage({
