@@ -1,278 +1,422 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolchest.site - Professional Tool Suite</title>
-    <!-- Google Fonts: Playfair Display for massive headings, DM Sans for body -->
+    <title>ToolChest | Convertidor y Optimizador de Archivos Gratis</title>
+    <meta name="description" content="ToolChest es la suite definitiva para convertir vídeo, editar PDFs y eliminar fondos de imágenes localmente. Privado, rápido y sin registros.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://toolchest.site/">
+    <meta property="og:title" content="ToolChest | Suite Maestra de Archivos">
+    <meta property="og:description" content="Procesa tus archivos con tecnología de navegador. 100% privado y gratuito.">
+    <meta property="og:image" content="https://toolchest.site/og-image.jpg">
+    
+    <!-- Premium Editorial Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="styles.css">
-    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Local Processing Engines -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib = window['pdfjs-dist/build/pdf']; pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+
+    <!-- AdSense Auto Ads Tag Placeholder -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXX" crossorigin="anonymous"></script> -->
 </head>
 <body>
-    <div class="noise-overlay"></div>
-
-    <!-- Top Banner Ad Slot -->
-    <div class="ad-slot top-banner">
-        <span>Advertisement Area (728x90)</span>
-        <!-- Insert AdSense script here -->
-    </div>
-
     <header class="header">
         <div class="logo">
-            <i class="fa-solid fa-toolbox logo-icon"></i>
+            <i class="fa-solid fa-toolbox logo-icon" aria-hidden="true"></i>
             <span>Toolchest<span class="tld">.site</span></span>
         </div>
         <nav class="auth-nav">
             <select id="langSwitcher" class="custom-select header-select">
-                <option value="en">EN</option>
                 <option value="es">ES</option>
+                <option value="en">EN</option>
             </select>
         </nav>
     </header>
 
     <main class="main-container">
-        <!-- Main Tool Column -->
+        <!-- Top Ad Placement (728x90 Desktop) -->
+        <div class="ad-container top-ad">
+            <div class="ad-placeholder">
+                <p>ANUNCIO SUPERIOR</p>
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-XXXXXX"
+                     data-ad-slot="ZZZZZZ"></ins>
+            </div>
+        </div>
+
+        <!-- Mobile Ad Placement (320x50 - Only visible on Mobile) -->
+        <div class="ad-container mobile-ad">
+            <div class="ad-placeholder">
+                <p>ANUNCIO MÓVIL</p>
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:320px;height:50px"
+                     data-ad-client="ca-pub-XXXXXX"
+                     data-ad-slot="WWWWWW"></ins>
+            </div>
+        </div>
+
+        <!-- Editorial Layer -->
         <article class="editorial-pane">
             <div class="hero-text">
-                <h1 data-i18n="hero_title">Elevate your workflow</h1>
-                <p data-i18n="hero_subtitle">Professional file conversions, background removal, and compression tools in one sleek interface.</p>
+                <h1 data-i18n="hero_title">Mejora tu <i>flujo</i> de trabajo</h1>
+                <p data-i18n="hero_subtitle">Herramientas de conversión, borrado de fondos y compresión en una interfaz táctil. 100% Privado.</p>
             </div>
 
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab-btn active" data-target="video-tool">
-                        <span class="tab-number">01.</span> <span data-i18n="tab_video">Video</span>
-                    </button>
-                    <button class="tab-btn" data-target="image-tool">
-                        <span class="tab-number">02.</span> <span data-i18n="tab_image">Image</span>
-                    </button>
-                    <button class="tab-btn" data-target="pdf-tool">
-                        <span class="tab-number">03.</span> <span data-i18n="tab_pdf">PDF</span>
-                    </button>
+                    <button class="tab-btn active" data-target="video-tool" data-i18n="tab_video">Estudio de Vídeo</button>
+                    <button class="tab-btn" data-target="image-tool" data-i18n="tab_image">Lab de Imagen</button>
+                    <button class="tab-btn" data-target="pdf-tool" data-i18n="tab_pdf">Suite PDF</button>
                 </div>
             </div>
 
             <div class="tool-content">
-                <!-- Video Tool -->
+                <!-- Video Studio Section -->
                 <div id="video-tool" class="tool-section active-tool">
-                    <h2 class="tool-title" data-i18n="video_title">Advanced Video Processing</h2>
+                    <h2 class="tool-title" data-i18n="video_title">Motor de Vídeo Avanzado</h2>
                     <form id="uploadFormVideo" class="tool-form">
-                        <div class="dropzone" id="dropzoneVideo">
-                            <i class="fa-solid fa-upload drop-icon"></i>
-                            <p data-i18n="video_drop">Drag & Drop your Video here</p>
-                            <span class="file-hint">MP4, MKV, AVI, MOV...</span>
-                            <input type="file" id="fileInputVideo" name="video" accept="video/*" required class="file-input">
+                        <div class="dropzone" role="button" aria-label="Zona de carga de vídeo">
+                            <i class="fa-solid fa-clapperboard drop-icon" aria-hidden="true"></i>
+                            <p data-i18n="video_drop">Arrastra tu Vídeo para comenzar</p>
+                            <input type="file" id="fileInputVideo" name="video" accept="video/*" class="file-input">
                         </div>
-                        <div class="selected-file" id="selectedFileVideo" style="display:none; flex-direction:column; align-items:stretch; gap:0.5rem;">
-                            <div style="display:flex; width:100%; align-items:center; gap:1rem;">
-                                <i class="fa-solid fa-file-video"></i>
-                                <span class="filename" style="flex:1;">filename.mp4</span>
-                                <i class="fa-solid fa-xmark remove-file" data-target="fileInputVideo"></i>
+                        <div class="selected-file" style="display:none; flex-direction:column; gap:1.5rem;">
+                            <div style="display:flex; align-items:center; gap:1rem; width:100%;">
+                                <i class="fa-solid fa-file-video" style="font-size:2rem; color:var(--acc-primary);"></i>
+                                <span class="filename" style="flex:1; font-weight:800;">video_master.mp4</span>
+                                <i class="fa-solid fa-xmark remove-file" style="cursor:pointer; font-size:1.5rem;"></i>
                             </div>
-                            <span class="file-meta" id="fileMetaVideo">0 MB</span>
-                            
-                            <!-- Video Trimmer Preview -->
-                            <div id="videoPreviewContainer" style="display:none; width:100%; margin-top:0.5rem; border-top: 1px solid var(--border-color); padding-top:1rem;">
+                            <div id="videoPreviewContainer" style="display:none; width:100%;">
                                 <video id="videoPreview" controls class="video-preview-player"></video>
-                                <div class="options-row" style="margin-top:0.5rem;">
-                                    <div class="input-group half">
-                                        <label for="videoStartTime"><span data-i18n="video_start">Start Time (sec):</span></label>
-                                        <input type="number" id="videoStartTime" name="startTime" min="0" step="0.1" value="0" class="custom-input">
+                                <div class="trim-timeline" id="videoTrimTimeline">
+                                    <div class="trim-track"></div>
+                                    <div class="trim-bar" id="videoTrimBar"></div>
+                                </div>
+                                <div class="trim-controls">
+                                    <div class="trim-group">
+                                        <label data-i18n="video_start">Empieza en:</label>
+                                        <div class="stepper">
+                                            <button type="button" class="step-btn" onclick="adjustTime('videoStartTime', -1)">-1s</button>
+                                            <input type="number" id="videoStartTime" name="startTime" class="custom-input small">
+                                            <button type="button" class="step-btn" onclick="adjustTime('videoStartTime', 1)">+1s</button>
+                                        </div>
                                     </div>
-                                    <div class="input-group half">
-                                        <label for="videoEndTime"><span data-i18n="video_end">End Time (sec):</span></label>
-                                        <input type="number" id="videoEndTime" name="endTime" min="0" step="0.1" class="custom-input">
+                                    <div class="trim-info">
+                                        <div class="trim-duration-badge" id="videoTrimDuration">Duración: 0.0s</div>
+                                    </div>
+                                    <div class="trim-group">
+                                        <label data-i18n="video_end">Termina en:</label>
+                                        <div class="stepper">
+                                            <button type="button" class="step-btn" onclick="adjustTime('videoEndTime', -1)">-1s</button>
+                                            <input type="number" id="videoEndTime" name="endTime" class="custom-input small">
+                                            <button type="button" class="step-btn" onclick="adjustTime('videoEndTime', 1)">+1s</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <p class="trim-hint" data-i18n="video_trim_hint">Adjust values to trim the video.</p>
+                                <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding-top:1rem;" data-i18n="video_trim_hint">Elige exactamente el trozo que quieres guardar.</p>
                             </div>
                         </div>
-                        
-                        <div class="tool-options card-bg">
-                            <div class="input-group">
-                                <label for="videoAction" data-i18n="video_action">Action:</label>
-                                <select id="videoAction" name="action" class="custom-select">
-                                    <option value="extract-audio" data-i18n="video_act_extract">Convert to MP3 (Audio Only)</option>
-                                    <option value="compress-video" data-i18n="video_act_compress">Compress Video (Reduce File Size)</option>
-                                </select>
+                        <div class="card-bg">
+                            <label data-i18n="video_action">¿Qué quieres hacer con este vídeo?</label>
+                            <div class="action-grid" id="videoActionGrid">
+                                <button type="button" class="action-opt active" data-value="convert-format">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span>Convertir Formato</span>
+                                </button>
+                                <button type="button" class="action-opt" data-value="extract-audio">
+                                    <i class="fa-solid fa-file-audio"></i>
+                                    <span data-i18n="video_act_extract">Extraer Audio (MP3)</span>
+                                </button>
+                                <button type="button" class="action-opt" data-value="compress-video">
+                                    <i class="fa-solid fa-box-archive"></i>
+                                    <span data-i18n="video_act_compress">Comprimir (H.264)</span>
+                                </button>
+                            </div>
+                            <input type="hidden" id="videoAction" name="action" value="convert-format">
+
+                            <div class="action-suboptions" id="videoFormatGroup" style="margin-top:2rem;">
+                                <label>Formato de Salida:</label>
+                                <div class="format-chips">
+                                    <label class="chip-opt"><input type="radio" name="format" value="mp4" checked><span>MP4</span></label>
+                                    <label class="chip-opt"><input type="radio" name="format" value="mkv"><span>MKV</span></label>
+                                    <label class="chip-opt"><input type="radio" name="format" value="mov"><span>MOV</span></label>
+                                    <label class="chip-opt"><input type="radio" name="format" value="avi"><span>AVI</span></label>
+                                    <label class="chip-opt"><input type="radio" name="format" value="gif"><span>GIF</span></label>
+                                </div>
                             </div>
 
-                            <div id="videoCompressOptions" class="conditional-options" style="display: none; margin-top:1rem;">
-                                <div class="input-group">
-                                    <label for="videoQuality" data-i18n="video_quality">Target Quality:</label>
-                                    <select id="videoQuality" name="quality" class="custom-select">
-                                        <option value="1080p" data-i18n="video_q_high">High (1080p)</option>
-                                        <option value="720p" selected data-i18n="video_q_med">Medium (720p)</option>
-                                        <option value="480p" data-i18n="video_q_low">Low (480p)</option>
-                                    </select>
+                            <div id="videoCompressOptions" style="display:none; margin-top:2rem;">
+                                <label data-i18n="video_quality">Calidad de Salida:</label>
+                                <div class="format-chips">
+                                    <label class="chip-opt"><input type="radio" name="quality" value="1080p"><span>Alta (1080p)</span></label>
+                                    <label class="chip-opt"><input type="radio" name="quality" value="720p" checked><span>Media (720p)</span></label>
+                                    <label class="chip-opt"><input type="radio" name="quality" value="480p"><span>Baja (480p)</span></label>
                                 </div>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn-primary"><span data-i18n="video_btn">Process Video</span> <i class="fa-solid fa-arrow-right"></i></button>
+                        <button type="submit" class="btn-primary" style="margin-top:2rem;" data-i18n="video_btn">Procesar Vídeo</button>
                     </form>
                 </div>
 
-                <!-- Image Tool -->
+                <!-- Image Lab Section -->
                 <div id="image-tool" class="tool-section">
-                    <h2 class="tool-title" data-i18n="img_title">Professional Image Tools</h2>
+                    <h2 class="tool-title" data-i18n="img_title">Suite Maestra de Imagen</h2>
                     <form id="uploadFormImage" class="tool-form">
-                        <div class="dropzone" id="dropzoneImage">
-                            <i class="fa-solid fa-upload drop-icon"></i>
-                            <p data-i18n="img_drop">Drag & Drop your Image here</p>
-                            <span class="file-hint">JPG, PNG, WEBP, GIF</span>
-                            <input type="file" id="fileInputImage" name="image" accept="image/*" required class="file-input">
+                        <div class="dropzone" role="button" aria-label="Zona de carga de imagen">
+                            <i class="fa-solid fa-wand-magic-sparkles drop-icon" aria-hidden="true"></i>
+                            <p data-i18n="img_drop">Arrastra tu Imagen aquí</p>
+                            <input type="file" id="fileInputImage" name="image" accept="image/*" class="file-input">
                         </div>
-                        <div class="selected-file" id="selectedFileImage" style="display:none; flex-direction:column; align-items:flex-start; gap:0.5rem;">
-                            <div style="display:flex; width:100%; align-items:center; gap:1rem;">
-                                <i class="fa-solid fa-file-image"></i>
-                                <span class="filename" style="flex:1;">filename.png</span>
-                                <i class="fa-solid fa-xmark remove-file" data-target="fileInputImage"></i>
+                        <div class="selected-file" style="display:none; flex-direction:column; gap:1.5rem;">
+                            <div style="display:flex; align-items:center; gap:1rem; width:100%;">
+                                <i class="fa-solid fa-image" style="font-size:2rem; color:var(--acc-primary);"></i>
+                                <span class="filename" style="font-weight:800;">source_image.png</span>
+                                <i class="fa-solid fa-xmark remove-file" style="cursor:pointer; font-size:1.5rem;"></i>
                             </div>
-                            <span class="file-meta" id="fileMetaImage">0 MB</span>
+                            <span class="file-meta">0 MB</span>
                         </div>
-                        
-                        <div class="tool-options card-bg">
-                            <div class="input-group">
-                                <label for="imageAction" data-i18n="img_action">Action:</label>
-                                <select id="imageAction" name="action" class="custom-select">
-                                    <option value="remove-bg" data-i18n="img_act_rm">Remove Background</option>
-                                    <option value="resize" data-i18n="img_act_res">Resize & Convert Format</option>
-                                </select>
+                        <div class="card-bg">
+                            <label data-i18n="img_action">¿Qué quieres hacer con esta imagen?</label>
+                            <div class="action-grid" id="imageActionGrid">
+                                <button type="button" class="action-opt active" data-value="remove-bg">
+                                    <i class="fa-solid fa-person-rays"></i>
+                                    <span data-i18n="img_act_rm">Borrar Fondo Mágico</span>
+                                </button>
+                                <button type="button" class="action-opt" data-value="resize">
+                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    <span data-i18n="img_act_res">Redimensionar</span>
+                                </button>
                             </div>
+                            <input type="hidden" id="imageAction" name="action" value="remove-bg">
 
-                            <div id="resizeOptions" class="conditional-options" style="display: none; margin-top:1rem;">
+                            <div id="resizeOptions" style="display:none; margin-top:2rem;">
                                 <div class="options-row">
                                     <div class="input-group half">
-                                        <label for="width" data-i18n="img_width">Width (px):</label>
-                                        <input type="number" id="width" name="width" placeholder="Auto" class="custom-input">
+                                        <label data-i18n="img_width">Ancho (px):</label>
+                                        <input type="number" id="width" name="width" class="custom-input" placeholder="Ej: 1920">
                                     </div>
                                     <div class="input-group half">
-                                        <label for="format" data-i18n="img_fmt">Format:</label>
-                                        <select id="format" name="format" class="custom-select">
-                                            <option value="png">PNG</option>
-                                            <option value="jpg">JPG</option>
-                                            <option value="webp">WEBP</option>
-                                            <option value="gif">GIF</option>
-                                        </select>
+                                        <label data-i18n="img_fmt">Formato:</label>
+                                        <div class="format-chips">
+                                            <label class="chip-opt"><input type="radio" name="format" value="png" checked><span>PNG</span></label>
+                                            <label class="chip-opt"><input type="radio" name="format" value="jpg"><span>JPG</span></label>
+                                            <label class="chip-opt"><input type="radio" name="format" value="webp"><span>WEBP</span></label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn-primary"><span data-i18n="img_btn">Process Image</span> <i class="fa-solid fa-arrow-right"></i></button>
+                        <button type="submit" class="btn-primary" style="margin-top:2rem;" data-i18n="img_btn">Procesar Imagen</button>
                     </form>
                 </div>
 
-                <!-- PDF Tool -->
+                <!-- PDF Architecture Section -->
                 <div id="pdf-tool" class="tool-section">
-                    <h2 class="tool-title" data-i18n="pdf_title">PDF Optimization & Full Metadata</h2>
+                    <h2 class="tool-title" data-i18n="pdf_title">Arquitectura PDF</h2>
                     <form id="uploadFormPdf" class="tool-form">
-                        <div class="dropzone" id="dropzonePdf">
-                            <i class="fa-solid fa-upload drop-icon"></i>
-                            <p data-i18n="pdf_drop">Drag & Drop your PDF here</p>
-                            <span class="file-hint" data-i18n="pdf_hint">Compress and edit all properties</span>
-                            <input type="file" id="fileInputPdf" name="pdf" accept="application/pdf" required class="file-input">
+                        <div class="dropzone">
+                            <i class="fa-solid fa-file-pdf drop-icon"></i>
+                            <p data-i18n="pdf_drop">Arrastra tu PDF aquí</p>
+                            <input type="file" id="fileInputPdf" name="pdf" accept="application/pdf" class="file-input">
                         </div>
-                        <div class="selected-file" id="selectedFilePdf" style="display:none; flex-direction:column; align-items:flex-start; gap:0.5rem;">
-                            <div style="display:flex; width:100%; align-items:center; gap:1rem;">
-                                <i class="fa-solid fa-file-pdf"></i>
-                                <span class="filename" style="flex:1;">filename.pdf</span>
-                                <i class="fa-solid fa-xmark remove-file" data-target="fileInputPdf"></i>
+                        <div class="selected-file" style="display:none; flex-direction:column; gap:1.5rem;">
+                            <div style="display:flex; align-items:center; gap:1rem; width:100%;">
+                                <i class="fa-solid fa-file-invoice" style="font-size:2rem; color:var(--acc-primary);"></i>
+                                <span class="filename" style="font-weight:800;">document_v1.pdf</span>
+                                <i class="fa-solid fa-xmark remove-file" style="cursor:pointer; font-size:1.5rem;"></i>
                             </div>
-                            <span class="file-meta" id="fileMetaPdf">0 MB</span>
                         </div>
+                        <div class="card-bg">
+                            <label>Tareas Disponibles:</label>
+                            <div class="action-grid" id="pdfActionGrid">
+                                <button type="button" class="action-opt active" data-value="compress-meta">
+                                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                                    <span>Optimizar Metadatos</span>
+                                </button>
+                                <button type="button" class="action-opt" data-value="visual-editor">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                    <span>Editor Visual (Firma)</span>
+                                </button>
+                            </div>
+                            <input type="hidden" id="pdfAction" name="action" value="compress-meta">
 
-                        <div class="tool-options card-bg">
-                            <p class="tool-desc" data-i18n="pdf_desc">The PDF will be automatically compressed when saving. You can also totally control the internal documentation properties below.</p>
-                            <div class="options-row">
+                            <div class="options-row" style="margin-top:2rem;">
                                 <div class="input-group half">
-                                    <label for="pdfTitle" data-i18n="pdf_f_title">Document Title:</label>
-                                    <input type="text" id="pdfTitle" name="title" class="custom-input">
+                                    <label data-i18n="pdf_f_title">Título:</label><input type="text" id="pdfTitle" name="title" class="custom-input">
                                 </div>
                                 <div class="input-group half">
-                                    <label for="pdfAuthor" data-i18n="pdf_f_author">Author:</label>
-                                    <input type="text" id="pdfAuthor" name="author" class="custom-input">
+                                    <label data-i18n="pdf_f_author">Autor:</label><input type="text" id="pdfAuthor" name="author" class="custom-input">
                                 </div>
                             </div>
                             <div class="options-row">
                                 <div class="input-group half">
-                                    <label for="pdfSubject" data-i18n="pdf_f_sub">Subject:</label>
-                                    <input type="text" id="pdfSubject" name="subject" class="custom-input">
+                                    <label data-i18n="pdf_f_sub">Asunto:</label><input type="text" id="pdfSubject" name="subject" class="custom-input">
                                 </div>
                                 <div class="input-group half">
-                                    <label for="pdfKeywords" data-i18n="pdf_f_key">Keywords:</label>
-                                    <input type="text" id="pdfKeywords" name="keywords" class="custom-input">
-                                </div>
-                            </div>
-                            <div class="options-row">
-                                <div class="input-group half">
-                                    <label for="pdfCreator" data-i18n="pdf_f_creat">Creator:</label>
-                                    <input type="text" id="pdfCreator" name="creator" class="custom-input">
-                                </div>
-                                <div class="input-group half">
-                                    <label for="pdfProducer" data-i18n="pdf_f_prod">Producer:</label>
-                                    <input type="text" id="pdfProducer" name="producer" class="custom-input">
+                                    <label data-i18n="pdf_f_key">Palabras Clave:</label><input type="text" id="pdfKeywords" name="keywords" class="custom-input">
                                 </div>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn-primary"><span data-i18n="pdf_btn">Process PDF</span> <i class="fa-solid fa-arrow-right"></i></button>
+                        <button type="submit" class="btn-primary" style="margin-top:2rem;" data-i18n="pdf_btn">Procesar PDF</button>
                     </form>
                 </div>
             </div>
 
-            <!-- Global Status & Result Area -->
+            <!-- Global Status & Feedback -->
             <div id="statusContainer" class="status-container" style="display: none;">
-                <p id="statusMessage" class="status-message" data-i18n="status_load">Processing your file...</p>
-                <div id="downloadAction" class="download-action" style="display: none;">
-                    <!-- Download button will be injected here -->
+                <p id="statusMessage" class="status-message">Iniciando motor de procesado...</p>
+                <div id="loader" class="loader-ui" style="display:none; justify-content:center; margin-bottom:2rem;">
+                   <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
                 </div>
+                <div id="downloadAction" style="display: none;"></div>
             </div>
-
         </article>
 
-        <!-- Sidebar Ad Slot -->
-        <aside class="ad-slot sidebar">
-            <span>Sponsor (300x600)</span>
-            <!-- AdSense Code Here -->
+        <!-- Sidebar context -->
+        <aside class="ad-slot sidebar ad-container">
+            <div class="ad-placeholder">
+                <p>PATROCINADO</p>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXX"
+                     data-ad-slot="YYYYYY"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
         </aside>
-
     </main>
 
-    <!-- Magic Wand Editor Modal -->
-    <div id="magicEditorModal" class="editor-modal" style="display: none;">
-        <div class="editor-content pane-modal">
+    <!-- SEO Content Section -->
+    <section class="seo-section">
+        <article class="seo-content">
+            <h2>Por qué elegir ToolChest.site para convertir archivos</h2>
+            <p>ToolChest no es solo un convertidor de archivos; es una herramienta de <strong>procesamiento local</strong> diseñada para garantizar la máxima privacidad de tus datos. Al utilizar el motor del navegador, minimizamos la transferencia de archivos a servidores externos.</p>
+            
+            <div class="faq-container">
+                <h3>Preguntas Frecuentes (FAQ)</h3>
+                <div class="faq-item">
+                    <h4>¿Es seguro usar ToolChest?</h4>
+                    <p>Sí. La mayoría de nuestras funciones (como el borrado de fondos y la edición de PDF) ocurren exclusivamente en tu navegador. Tus archivos profesionales nunca abandonan tu equipo.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>¿Qué formatos de vídeo soporta?</h4>
+                    <p>Soportamos MP4, MKV, AVI, MOV y la conversión a GIF animado de alta fidelidad.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>¿Tengo que pagar por las funciones Pro?</h4>
+                    <p>No. Todas las herramientas de ToolChest son gratuitas y se mantienen gracias a la publicidad no intrusiva que mostramos.</p>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="cookie-banner-ui" style="display:none;">
+        <div class="cookie-content">
+            <p>Utilizamos cookies propias y de terceros para mejorar tu experiencia y mostrar publicidad relevante. Al aceptar, consientes el uso de todas las cookies conforme al RGPD.</p>
+            <div class="cookie-actions">
+                <button id="accept-cookies" class="btn-primary">Aceptar todo</button>
+                <a href="/politica-de-cookies" class="btn-outline">Más info</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal: Precision Desk -->
+    <div id="magicEditorModal" class="editor-modal" style="display:none;">
+        <div class="pane-modal">
             <div class="editor-header">
-                <h2 data-i18n="modal_title">Interactive Background Eraser</h2>
-                <button id="closeEditorBtn" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+                <h2 data-i18n="modal_title">Borrador de Fondos Pro</h2>
+                <button id="closeEditorBtn" class="btn-icon" style="font-size:2.5rem;">&times;</button>
             </div>
             <div class="editor-toolbar">
-                <div class="input-group slider-group">
-                    <label for="toleranceSlider"><span data-i18n="modal_tol">Magic Wand Tolerance:</span> <span id="tolValue">30</span></label>
-                    <input type="range" id="toleranceSlider" min="0" max="255" value="30">
+                <div class="tool-selectors">
+                    <button id="toolModeWand" class="active" title="Varita Mágica"><i class="fa-solid fa-wand-sparkles"></i></button>
+                    <button id="toolModeChroma" title="Extractor de Color"><i class="fa-solid fa-eye-dropper"></i></button>
+                    <button id="toolModeBrush" title="Pincel Manual"><i class="fa-solid fa-brush"></i></button>
                 </div>
-                <div class="toolbar-actions">
-                    <button id="undoEditorBtn" class="btn-outline"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="modal_undo">Undo</span></button>
-                    <button id="clearEditorBtn" class="btn-outline"><i class="fa-solid fa-trash"></i> <span data-i18n="modal_reset">Reset</span></button>
+                
+                <div class="input-group" id="wandTolGroup" style="margin:0; flex-direction:row; align-items:center; gap:1rem;">
+                    <label data-i18n="modal_tol">Tolerancia:</label>
+                    <input type="range" id="toleranceSlider" min="0" max="255" value="30" style="width:120px;">
+                    <span id="tolValue" style="font-weight:900; min-width:30px;">30</span>
+                </div>
+
+                <div class="input-group" id="brushSizeGroup" style="display:none; margin:0; flex-direction:row; align-items:center; gap:1rem;">
+                    <label>Pincel:</label>
+                    <input type="range" id="brushSizeSlider" min="5" max="150" value="20" style="width:120px;">
+                    <span id="brushSizeValue" style="font-weight:900; min-width:30px;">20</span>
+                </div>
+
+                <div class="zoom-controls" style="margin-left:auto;">
+                    <button id="imgZoomOutBtn"><i class="fa-solid fa-minus"></i></button>
+                    <span id="imgZoomLevel" style="font-weight:900; min-width:50px; text-align:center;">100%</span>
+                    <button id="imgZoomInBtn"><i class="fa-solid fa-plus"></i></button>
+                    <button id="imgPanBtn"><i class="fa-solid fa-hand-fist"></i></button>
+                </div>
+
+                <div style="display:flex; gap:0.5rem;">
+                    <button id="undoEditorBtn" class="btn-outline" title="Deshacer"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button id="clearEditorBtn" class="btn-outline" title="Reiniciar"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
             </div>
-            <div class="canvas-container">
-                <canvas id="imageCanvas"></canvas>
+            <div class="canvas-container checkerboard-bg">
+                <div id="imageCanvasWrapper">
+                    <canvas id="imageCanvas"></canvas>
+                </div>
             </div>
-            <div class="editor-footer">
-                <p class="file-hint" data-i18n="modal_hint">Click anywhere on the background to magically erase it.</p>
-                <button id="applyEditorBtn" class="btn-primary"><span data-i18n="modal_apply">Apply & Process</span></button>
+            <div class="editor-footer" style="padding:1.5rem 2.5rem; background:#f8fafc; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                <p data-i18n="modal_hint" style="font-size:0.9rem; font-weight:600; color:var(--text-muted);">Elige una herramienta y actúa sobre el lienzo.</p>
+                <button id="applyEditorBtn" class="btn-primary" style="width:auto; padding:1rem 3rem;" data-i18n="modal_apply">Finalizar Proyecto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Visual Table -->
+    <div id="pdfEditorModal" class="editor-modal" style="display:none;">
+        <div class="pane-modal">
+            <div class="editor-header">
+                <h2>Document Architecture Engine</h2>
+                <div class="zoom-controls">
+                    <button id="pdfZoomOutBtn"><i class="fa-solid fa-minus"></i></button>
+                    <span id="pdfZoomLevel" style="font-weight:900; min-width:50px; text-align:center;">100%</span>
+                    <button id="pdfZoomInBtn"><i class="fa-solid fa-plus"></i></button>
+                    <button id="pdfPanBtn"><i class="fa-solid fa-hand"></i></button>
+                    <button id="pdfSignBtn" class="btn-outline" style="margin-left:1rem;"><i class="fa-solid fa-pen-nib"></i> Sign</button>
+                    <button id="pdfClearSignBtn" class="btn-outline" style="display:none;"><i class="fa-solid fa-eraser"></i> Clear</button>
+                    <button id="closePdfEditorBtn" class="btn-icon" style="margin-left:1rem; font-size:2.5rem;">&times;</button>
+                </div>
+            </div>
+            <div class="canvas-container" style="background:#475569; position:relative;">
+                <div id="pdfCanvasWrapper" style="position:relative;">
+                    <canvas id="pdfRenderCanvas" style="box-shadow:var(--shadow-xl); border-radius:4px;"></canvas>
+                    <canvas id="pdfDrawLayer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></canvas>
+                </div>
+            </div>
+            <div class="editor-footer" style="padding:1.5rem 2.5rem; background:#f8fafc; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                <p style="font-size:0.9rem; font-weight:600; color:var(--text-muted);">Añade tu firma o edita metadatos antes de exportar.</p>
+                <button id="applyPdfEditorBtn" class="btn-primary" style="width:auto; padding:1rem 3rem;">Export Final PDF</button>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        <p>&copy; 2026 Toolchest.site. Edition I.</p>
+        <div class="footer-links">
+            <a href="/aviso-legal">Aviso Legal</a>
+            <a href="/politica-de-privacidad">Privacidad</a>
+            <a href="/politica-de-cookies">Cookies</a>
+            <a href="/terminos-y-condiciones">Términos</a>
+        </div>
+        <p>&copy; 2026 Toolchest Editorial. Powered by browser processing technology.</p>
     </footer>
 
     <script src="app.js"></script>

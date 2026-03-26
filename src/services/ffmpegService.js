@@ -18,21 +18,30 @@ function processVideo(inputPath, outputPath, action, quality, startSecs, duratio
                 .noVideo() // -vn
                 .audioCodec('libmp3lame')
                 .audioBitrate('192k');
-        } else if (action === 'compress-video') {
-            // Apply compression and resizing
-            command = command.videoCodec('libx264');
-            
-            if (quality === '1080p') {
-                command = command.size('?x1080').videoBitrate('2500k');
-            } else if (quality === '720p') {
-                command = command.size('?x720').videoBitrate('1500k');
-            } else if (quality === '480p') {
-                command = command.size('?x480').videoBitrate('800k');
+        } else if (action === 'compress-video' || action === 'convert-format') {
+            // Check if output is GIF
+            if (outputPath.endsWith('.gif')) {
+                command = command
+                    .outputOptions([
+                        '-vf', 'fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse',
+                        '-loop', '0'
+                    ]);
             } else {
-                command = command.size('?x720').videoBitrate('1500k'); // Default Medium
+                // Apply encoding (H.264)
+                command = command.videoCodec('libx264').audioCodec('aac');
+                
+                if (quality === '1080p') {
+                    command = command.size('?x1080').videoBitrate('2500k');
+                } else if (quality === '720p') {
+                    command = command.size('?x720').videoBitrate('1500k');
+                } else if (quality === '480p') {
+                    command = command.size('?x480').videoBitrate('800k');
+                } else {
+                    command = command.size('?x720').videoBitrate('1500k'); // Default Medium
+                }
             }
         } else {
-            return reject(new Error('Invalid video action'));
+            return reject(new Error('Invalid video action: ' + action));
         }
 
         command

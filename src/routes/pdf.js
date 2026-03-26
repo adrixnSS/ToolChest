@@ -10,5 +10,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post('/compress', upload.single('pdf'), pdfController.compressPdf);
+router.post('/merge', upload.array('pdf', 50), pdfController.mergePdfs);
+router.post('/split', upload.single('pdf'), pdfController.splitPdf);
+router.post('/sign', upload.fields([{ name: 'pdf', maxCount: 1 }, { name: 'signature', maxCount: 1 }]), pdfController.signPdf);
 
 module.exports = router;

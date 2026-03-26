@@ -51,10 +51,12 @@ const upload = multer({ storage: storage });
 // Middleware para servir archivos estáticos
 app.use(express.static('public'));
 
-// Ruta principal que sirve el frontend
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// Rutas principales y legales
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/politica-de-privacidad', (req, res) => res.sendFile(path.join(__dirname, 'public', 'politica-de-privacidad.html')));
+app.get('/politica-de-cookies', (req, res) => res.sendFile(path.join(__dirname, 'public', 'politica-de-cookies.html')));
+app.get('/terminos-y-condiciones', (req, res) => res.sendFile(path.join(__dirname, 'public', 'terminos-condiciones.html')));
+app.get('/aviso-legal', (req, res) => res.sendFile(path.join(__dirname, 'public', 'aviso-legal.html')));
 
 const videoRoutes = require('./src/routes/video');
 const imageRoutes = require('./src/routes/image');

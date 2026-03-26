@@ -7,12 +7,14 @@ exports.processVideo = async (req, res) => {
         return res.status(400).json({ error: 'No se ha subido ningún archivo de vídeo.' });
     }
 
-    const { action, quality, startTime, endTime } = req.body;
+    const { action, quality, startTime, endTime, format } = req.body;
     const inputPath = req.file.path;
     const originalName = path.parse(req.file.originalname).name;
     
-    const isAudioExtraction = action === 'extract-audio';
-    const ext = isAudioExtraction ? '.mp3' : '.mp4';
+    // Determine extension: if extract-audio then mp3, if convert/compress use selected format or mp4
+    let ext = '.mp4';
+    if (action === 'extract-audio') ext = '.mp3';
+    else if (format) ext = `.${format.toLowerCase()}`;
     
     const outputPath = path.join('uploads', `${originalName}-${Date.now()}${ext}`);
 
@@ -30,15 +32,19 @@ exports.processVideo = async (req, res) => {
     try {
         await ffmpegService.processVideo(inputPath, outputPath, action, quality, startSecs, duration);
         
+        // Ensure the file exists before sending
+        if (!fs.existsSync(outputPath)) throw new Error('FFmpeg failed to create output file.');
+
         res.download(outputPath, path.basename(outputPath), (err) => {
             if (err) console.error('Error al enviar el archivo:', err);
-            fs.unlinkSync(inputPath);
-            fs.unlinkSync(outputPath);
+            if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+            if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
         });
 
     } catch (error) {
         console.error('Error en la conversión de vídeo:', error);
         if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+        if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
         res.status(500).json({ error: 'El procesado del vídeo ha fallado.', details: error.message });
     }
 };
