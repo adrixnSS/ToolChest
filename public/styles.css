@@ -311,6 +311,26 @@ label { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; color: 
 .step-btn:hover { background: var(--bg-page); border-color: var(--text-main); }
 .custom-input.small { padding: 0.5rem; text-align: center; width: 80px; font-weight: 900; }
 
+/* Image Editor: Pro Controls */
+.filter-strip {
+    display: flex; gap: 0.75rem; padding: 1rem 2.5rem; background: #f1f5f9;
+    border-bottom: 1px solid var(--border-color); overflow-x: auto;
+}
+.filter-opt {
+    padding: 0.5rem 1.25rem; background: white; border: 1px solid var(--border-color);
+    border-radius: 50px; cursor: pointer; font-size: 0.8rem; font-weight: 800;
+    transition: 0.2s; white-space: nowrap; color: var(--text-muted);
+}
+.filter-opt:hover { border-color: var(--acc-primary); color: var(--acc-primary); }
+.filter-opt.active { background: var(--acc-primary); border-color: var(--acc-primary); color: white; box-shadow: var(--shadow-sm); }
+
+.adj-controls { display: flex; gap: 1.5rem; align-items: center; padding: 0 1rem; }
+.adj-group { display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); }
+.adj-group i { font-size: 1.1rem; }
+.mini-slider { width: 100px; height: 4px; accent-color: var(--acc-primary); cursor: pointer; }
+
+.divider { width: 1px; height: 30px; background: var(--border-color); margin: 0 0.5rem; }
+
 /* Modal Essentials: Auto-Fit & Visibility */
 .editor-modal { z-index: 9999 !important; }
 #pdfRenderCanvas, #imageCanvas { 

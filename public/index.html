@@ -345,29 +345,39 @@
                     <button id="toolModeBrush" title="Pincel Manual"><i class="fa-solid fa-brush"></i></button>
                 </div>
                 
-                <div class="input-group" id="wandTolGroup" style="margin:0; flex-direction:row; align-items:center; gap:1rem;">
-                    <label data-i18n="modal_tol">Tolerancia:</label>
-                    <input type="range" id="toleranceSlider" min="0" max="255" value="30" style="width:120px;">
-                    <span id="tolValue" style="font-weight:900; min-width:30px;">30</span>
-                </div>
+                <div class="divider"></div>
 
-                <div class="input-group" id="brushSizeGroup" style="display:none; margin:0; flex-direction:row; align-items:center; gap:1rem;">
-                    <label>Pincel:</label>
-                    <input type="range" id="brushSizeSlider" min="5" max="150" value="20" style="width:120px;">
-                    <span id="brushSizeValue" style="font-weight:900; min-width:30px;">20</span>
+                <div class="adj-controls">
+                    <div class="adj-group">
+                        <i class="fa-solid fa-sun"></i>
+                        <input type="range" id="brightnessSlider" min="50" max="150" value="100" class="mini-slider">
+                    </div>
+                    <div class="adj-group">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                        <input type="range" id="contrastSlider" min="50" max="150" value="100" class="mini-slider">
+                    </div>
                 </div>
 
                 <div class="zoom-controls" style="margin-left:auto;">
                     <button id="imgZoomOutBtn"><i class="fa-solid fa-minus"></i></button>
                     <span id="imgZoomLevel" style="font-weight:900; min-width:50px; text-align:center;">100%</span>
                     <button id="imgZoomInBtn"><i class="fa-solid fa-plus"></i></button>
-                    <button id="imgPanBtn"><i class="fa-solid fa-hand-fist"></i></button>
                 </div>
 
                 <div style="display:flex; gap:0.5rem;">
-                    <button id="undoEditorBtn" class="btn-outline" title="Deshacer"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button id="undoEditorBtn" class="btn-outline" title="Atrás"><i class="fa-solid fa-rotate-left"></i></button>
                     <button id="clearEditorBtn" class="btn-outline" title="Reiniciar"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
+            </div>
+
+            <div class="filter-strip" id="filterStrip">
+                <button class="filter-opt active" data-filter="none">Original</button>
+                <button class="filter-opt" data-filter="grayscale(100%)">B/N</button>
+                <button class="filter-opt" data-filter="sepia(100%)">Sepia</button>
+                <button class="filter-opt" data-filter="invert(100%)">Invertir</button>
+                <button class="filter-opt" data-filter="saturate(200%)">Vibrante</button>
+                <button class="filter-opt" data-filter="blur(2px)">Suave</button>
+                <button class="filter-opt" data-filter="hue-rotate(90deg)">Pop Art</button>
             </div>
             <div class="canvas-container checkerboard-bg">
                 <div id="imageCanvasWrapper">

@@ -61,13 +61,9 @@ window.adjustTime = (inputId, delta) => {
     const startInput = document.getElementById('videoStartTime');
     const endInput = document.getElementById('videoEndTime');
     const video = document.getElementById('videoPreview');
-    
     let newVal = Math.max(0, Math.min(parseFloat(input.value || 0) + delta, video.duration || 0));
-    
-    // Safety checks
     if(inputId === 'videoStartTime' && newVal >= parseFloat(endInput.value)) newVal = parseFloat(endInput.value) - 0.1;
     if(inputId === 'videoEndTime' && newVal <= parseFloat(startInput.value)) newVal = parseFloat(startInput.value) + 0.1;
-
     input.value = newVal.toFixed(1);
     video.currentTime = newVal;
     input.dispatchEvent(new Event('change'));
@@ -131,11 +127,53 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('videoFormatGroup').style.display = (val === 'convert-format') ? 'block' : 'none';
     });
 
+    // --- Image Editing Engine (Filters & Adjustments) ---
+    let currentImgFilter = 'none';
+    let currentBrightness = 100;
+    let currentContrast = 100;
+    const imgCanvas = document.getElementById('imageCanvas');
+
+    const updateImgDisplay = () => {
+        if(!imgCanvas) return;
+        const filterStr = currentImgFilter === 'none' ? '' : currentImgFilter;
+        imgCanvas.style.filter = `${filterStr} brightness(${currentBrightness}%) contrast(${currentContrast}%)`.trim();
+    };
+
+    document.querySelectorAll('.filter-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-opt').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentImgFilter = btn.getAttribute('data-filter');
+            updateImgDisplay();
+        });
+    });
+
+    document.getElementById('brightnessSlider')?.addEventListener('input', (e) => {
+        currentBrightness = e.target.value;
+        updateImgDisplay();
+    });
+
+    document.getElementById('contrastSlider')?.addEventListener('input', (e) => {
+        currentContrast = e.target.value;
+        updateImgDisplay();
+    });
+
+    document.getElementById('clearEditorBtn')?.addEventListener('click', () => {
+        currentImgFilter = 'none';
+        currentBrightness = 100;
+        currentContrast = 100;
+        document.getElementById('brightnessSlider').value = 100;
+        document.getElementById('contrastSlider').value = 100;
+        document.querySelectorAll('.filter-opt').forEach(b => b.classList.remove('active'));
+        document.querySelector('.filter-opt[data-filter="none"]').classList.add('active');
+        updateImgDisplay();
+    });
+
     document.getElementById('imageAction')?.addEventListener('change', (e) => {
         document.getElementById('resizeOptions').style.display = (e.target.value === 'resize') ? 'block' : 'none';
     });
 
-    // --- Advanced Video Interaction (Timeline Drag & Seek) ---
+    // --- Video Engine ---
     const video = document.getElementById('videoPreview');
     const timeline = document.getElementById('videoTrimTimeline');
     const bar = document.getElementById('videoTrimBar');
@@ -144,13 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const durationLbl = document.getElementById('videoTrimDuration');
 
     let isDragging = false;
-    let dragPart = null; // 'left', 'right', 'center'
+    let dragPart = null;
 
     const updateTrimUI = () => {
         const start = parseFloat(startIn.value) || 0;
         const end = parseFloat(endIn.value) || 0;
         const duration = video.duration || 1;
-        
         const left = (start / duration) * 100;
         const width = ((end - start) / duration) * 100;
         if(bar) { bar.style.left = left + '%'; bar.style.width = width + '%'; }
@@ -170,15 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = timeline.getBoundingClientRect();
         const offsetX = e.clientX - rect.left;
         const clickedTime = (offsetX / rect.width) * video.duration;
-        
         const start = parseFloat(startIn.value);
         const end = parseFloat(endIn.value);
-        const threshold = (video.duration * 0.05); // 5% tolerance
+        const threshold = (video.duration * 0.05);
 
         if(Math.abs(clickedTime - start) < threshold) dragPart = 'left';
         else if(Math.abs(clickedTime - end) < threshold) dragPart = 'right';
         else if(clickedTime > start && clickedTime < end) dragPart = 'center';
-        else dragPart = null;
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -186,21 +221,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = timeline.getBoundingClientRect();
         const offsetX = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
         const newTime = (offsetX / rect.width) * video.duration;
-
-        if(dragPart === 'left') {
-            const end = parseFloat(endIn.value);
-            startIn.value = Math.min(newTime, end - 0.1).toFixed(1);
-            video.currentTime = parseFloat(startIn.value);
-        } else if(dragPart === 'right') {
-            const start = parseFloat(startIn.value);
-            endIn.value = Math.max(newTime, start + 0.1).toFixed(1);
-            video.currentTime = parseFloat(endIn.value);
-        }
+        if(dragPart === 'left') { startIn.value = Math.min(newTime, parseFloat(endIn.value) - 0.1).toFixed(1); video.currentTime = parseFloat(startIn.value); }
+        else if(dragPart === 'right') { endIn.value = Math.max(newTime, parseFloat(startIn.value) + 0.1).toFixed(1); video.currentTime = parseFloat(endIn.value); }
         updateTrimUI();
     });
 
     document.addEventListener('mouseup', () => { isDragging = false; dragPart = null; });
 
+    // --- File Preview Logic ---
     const fileInputs = document.querySelectorAll('.file-input');
     fileInputs.forEach(input => {
         const dropzone = input.closest('.dropzone');
@@ -232,11 +260,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (input.id === 'fileInputVideo') {
                     video.src = URL.createObjectURL(file);
                     video.onloadedmetadata = () => {
-                        thumb.innerHTML = ''; thumb.className = 'preview-video-thumb'; thumb.style.width = '100%';
+                        thumb.innerHTML = '';
                         const vClone = document.createElement('video'); vClone.src = video.src; vClone.style.width='100%'; thumb.appendChild(vClone);
                         extra.textContent = `Duración: ${video.duration.toFixed(1)}s`;
-                        startIn.value = 0;
-                        endIn.value = video.duration.toFixed(1);
+                        startIn.value = 0; endIn.value = video.duration.toFixed(1);
                         document.getElementById('videoPreviewContainer').style.display = 'block';
                         updateTrimUI();
                     };
@@ -272,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             resetStatus();
         };
-
         input.addEventListener('change', (e) => { if (input.files.length) updateState(input.files[0]); });
         dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = 'var(--acc-primary)'; dropzone.style.backgroundColor = 'var(--acc-primary-soft)'; });
         dropzone.addEventListener('dragleave', (e) => { e.preventDefault(); dropzone.style.borderColor = 'var(--border-color)'; dropzone.style.backgroundColor = 'white'; });
@@ -325,15 +351,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!input.files.length) return;
         const btn = form.querySelector('button[type="submit"]');
         btn.disabled = true;
-        setStatus(dict.status_load || '¡Manos a la obra! 🔨', 'loading');
+        setStatus(dict.status_load || '🔨', 'loading');
         try {
-            const resp = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
+            const fd = new FormData(form);
+            const resp = await fetch(endpoint, { method: 'POST', body: fd });
             if (!resp.ok) throw new Error(resp.status === 400 ? dict.err_format : dict.err_server);
             const blob = await resp.blob();
-            setStatus('¡Proceso completado con éxito!', 'success');
+            setStatus('¡Completado!', 'success');
             const ext = blob.type.split('/')[1] === 'x-matroska' ? 'mkv' : (blob.type.split('/')[1] || 'out');
             renderDownload(URL.createObjectURL(blob), input.files[0].name.replace(/\.[^/.]+$/, "") + "_toolchest." + ext);
-        } catch (error) { setStatus(`<i class="fa-solid fa-triangle-exclamation"></i> ${error.message}`, 'error'); }
+        } catch (error) { setStatus(`⚠ ${error.message}`, 'error'); }
         finally { btn.disabled = false; }
     };
 
@@ -344,11 +371,28 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const f = document.getElementById('fileInputImage').files[0];
             const r = new FileReader(); r.onload = (ev) => {
-                const img = new Image(); img.onload = () => { drawImg(img); document.getElementById('magicEditorModal').style.display = 'flex'; };
+                const img = new Image(); img.onload = () => { 
+                    document.getElementById('magicEditorModal').style.display = 'flex';
+                    // Pequeño delay para que el DOM se actualice y las dimensiones del container sean reales
+                    setTimeout(() => drawImg(img), 50);
+                };
                 img.src = ev.target.result;
             };
             r.readAsDataURL(f);
         }
+    });
+
+    document.getElementById('applyEditorBtn')?.addEventListener('click', async () => {
+        const outCanvas = document.createElement('canvas');
+        const outCtx = outCanvas.getContext('2d');
+        outCanvas.width = imgCanvas.width; outCanvas.height = imgCanvas.height;
+        outCtx.filter = imgCanvas.style.filter;
+        outCtx.drawImage(imgCanvas, 0, 0);
+        
+        const blob = await new Promise(res => outCanvas.toBlob(res, 'image/png'));
+        setStatus('¡Imagen aplicada!', 'success');
+        renderDownload(URL.createObjectURL(blob), "imagen_editada_toolchest.png");
+        document.getElementById('magicEditorModal').style.display = 'none';
     });
 
     document.getElementById('uploadFormPdf').addEventListener('submit', (e) => {
@@ -359,11 +403,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupPanZoom = (wrapperId, zoomInId, zoomOutId, zoomLevelId) => {
         const wrapper = document.getElementById(wrapperId);
         if(!wrapper) return null;
-        let scale = 1; let trX = 0; let trY = 0;
-        const update = () => { wrapper.style.transform = `scale(${scale}) translate(${trX}px, ${trY}px)`; document.getElementById(zoomLevelId).textContent = Math.round(scale*100)+'%'; };
+        let scale = 1;
+        const update = () => { wrapper.style.transform = `scale(${scale})`; document.getElementById(zoomLevelId).textContent = Math.round(scale*100)+'%'; };
         document.getElementById(zoomInId)?.addEventListener('click', () => { scale = Math.min(scale * 1.2, 5); update(); });
         document.getElementById(zoomOutId)?.addEventListener('click', () => { scale = Math.max(scale / 1.2, 0.2); update(); });
-        return { reset: () => { scale=1; trX=0; trY=0; update(); } };
+        return { reset: () => { scale=1; update(); } };
     };
     setupPanZoom('imageCanvasWrapper', 'imgZoomInBtn', 'imgZoomOutBtn', 'imgZoomLevel');
     const pdfPZ = setupPanZoom('pdfCanvasWrapper', 'pdfZoomInBtn', 'pdfZoomOutBtn', 'pdfZoomLevel');
@@ -372,43 +416,37 @@ document.addEventListener('DOMContentLoaded', () => {
     let pdfDrawCtx = null;
 
     async function openVisualPdfEditor(file) {
-        const modal = document.getElementById('pdfEditorModal');
-        modal.style.display = 'flex';
+        const modal = document.getElementById('pdfEditorModal'); modal.style.display = 'flex';
         const canvas = document.getElementById('pdfRenderCanvas');
         const drawLayer = document.getElementById('pdfDrawLayer');
         const ctx = canvas.getContext('2d');
         pdfDrawCtx = drawLayer.getContext('2d');
-        
         try {
             const pdfjs = window['pdfjs-dist/build/pdf'] || window.pdfjsLib;
             const data = new Uint8Array(await file.arrayBuffer());
             const pdf = await pdfjs.getDocument(data).promise;
             const page = await pdf.getPage(1);
-            
             const container = modal.querySelector('.canvas-container');
-            const targetWidth = container.clientWidth * 0.9;
-            const viewportOrig = page.getViewport({scale: 1});
-            const scale = targetWidth / viewportOrig.width;
-            
+            const vpOrig = page.getViewport({scale: 1});
+            const scale = (container.clientWidth * 0.9) / vpOrig.width;
             const vp = page.getViewport({scale: Math.min(scale, 1.5)}); 
             canvas.width = vp.width; canvas.height = vp.height;
             drawLayer.width = vp.width; drawLayer.height = vp.height;
             await page.render({canvasContext: ctx, viewport: vp}).promise;
             if(pdfPZ) pdfPZ.reset();
-        } catch (e) { console.error("PDF Render Error", e); }
+        } catch (e) { console.error("PDF Error", e); }
     }
 
     document.getElementById('closePdfEditorBtn')?.addEventListener('click', () => document.getElementById('pdfEditorModal').style.display = 'none');
+    document.getElementById('closeEditorBtn')?.addEventListener('click', () => document.getElementById('magicEditorModal').style.display = 'none');
 
     const drawImg = (img) => {
-        const canvas = document.getElementById('imageCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = imgCanvas.getContext('2d');
         const modal = document.getElementById('magicEditorModal');
         const container = modal.querySelector('.canvas-container');
         let scale = Math.min(container.clientWidth / img.width, container.clientHeight / img.height, 1);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        imgCanvas.width = img.width * scale; imgCanvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, imgCanvas.width, imgCanvas.height);
     };
 
     const dLayer = document.getElementById('pdfDrawLayer');
